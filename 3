@@ -1,0 +1,34 @@
+const crypto = require('crypto');
+
+class Block {
+    constructor(index, timestamp, data, previousHash = '') {
+        this.index = index;
+        this.timestamp = timestamp;
+        this.data = data;
+        this.previousHash = previousHash;
+        this.hash = this.calculateHash();
+    }
+
+    calculateHash() {
+        return crypto.createHash('sha256').update(
+            this.index + this.timestamp + JSON.stringify(this.data) + this.previousHash
+        ).digest('hex');
+    }
+}
+
+// Create 3 blocks and link them
+const block1 = new Block(1, Date.now().toString(), { amount: 100 }, "0");
+const block2 = new Block(2, Date.now().toString(), { amount: 50 }, block1.hash);
+const block3 = new Block(3, Date.now().toString(), { amount: 25 }, block2.hash);
+
+console.log("Block 1:", block1);
+console.log("Block 2:", block2);
+console.log("Block 3:", block3);
+
+// Challenge: tamper block1 and see the impact
+block1.data.amount = 999;
+block1.hash = block1.calculateHash();
+
+console.log("\nAfter tampering Block 1:");
+console.log("Block 1:", block1);
+console.log("Block 2 is still pointing to old hash:", block2.previousHash === block1.hash ? "Valid" : "Invalid");

@@ -1,0 +1,29 @@
+const miner = { id: "Miner1", power: Math.floor(Math.random() * 100) };
+const staker = { id: "Staker1", stake: Math.floor(Math.random() * 100) };
+const voters = [
+    { voter: "UserA", vote: "ValidatorA" },
+    { voter: "UserB", vote: "ValidatorB" },
+    { voter: "UserC", vote: "ValidatorA" }
+];
+
+console.log("=== Consensus Mechanism Simulation ===");
+
+console.log("\n[PoW]");
+console.log(`Miner Power: ${miner.power}`);
+console.log("Selected Validator:", miner.id, "(highest power)");
+console.log("Reason: Validator with highest power is chosen");
+
+console.log("\n[PoS]");
+console.log(`Staker Stake: ${staker.stake}`);
+console.log("Selected Validator:", staker.id, "(highest stake)");
+console.log("Reason: Validator with highest stake is chosen");
+
+console.log("\n[DPoS]");
+const voteCounts = {};
+voters.forEach(v => {
+    voteCounts[v.vote] = (voteCounts[v.vote] || 0) + 1;
+});
+const selected = Object.keys(voteCounts).reduce((a, b) => voteCounts[a] > voteCounts[b] ? a : b);
+console.log("Votes:", voteCounts);
+console.log("Selected Delegate:", selected);
+console.log("Reason: Delegate with most votes is selected");
